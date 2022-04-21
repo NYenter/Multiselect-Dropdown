@@ -7,7 +7,7 @@ You will be recreating a multiselect dropdown component, packed with several fea
 At Blitz, we deliver solutions with a future-focused, pixel-perfect mindset. So pay extra attention to the user experiences, and the design details provided below.
 
 ## Example
-[image](https://user-images.githubusercontent.com/48213012/164521181-212e5ec0-43a2-4e04-afd6-e29e5255f374.png)
+([image](https://user-images.githubusercontent.com/48213012/164521181-212e5ec0-43a2-4e04-afd6-e29e5255f374.png))
 
 ## Design Guide:
 
