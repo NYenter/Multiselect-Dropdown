@@ -49,7 +49,7 @@ const SearchResultContainer = ({
                 {item.name.split(/| /).map((letter, idx) => {
                   return (
                     <CustomLetters
-                      is_in_query={`${item.queriedLetters[idx]}`}
+                      is_in_query={`${item?.queriedLetters[idx]}`}
                       text_color={item.hex}
                       key={idx}
                     >

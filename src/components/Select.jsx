@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { styled } from "goober";
 import useGetColor from "../hooks/useGetColor";
+import useHighlightMatching from "../hooks/useHighlightMatching";
 import QueryResultContainer from "./queried results/QueryResultContainer";
 import SelectedTags from "./tags/SelectedTags";
 import { ReactComponent as Clear } from "../assets/close.svg";
@@ -10,10 +11,12 @@ const Select = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [lastSelectedItem, setLastSelectedItem] = useState("");
   const [results, setResults] = useState([]);
+  const [higlighteResults, setHighlightedResults] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
   const [isTextDisabled, setIsTextDisabled] = useState(false);
-  const { data, loading } = useGetColor({ query: input.toLowerCase() });
   const [reset, setReset] = useState(false);
+  const { data, loading } = useGetColor({ query: input.toLowerCase() });
+  const higlightedResult = useHighlightMatching(results, input);
   const tagRef = useRef();
   let clearFilteredItems = false;
 
@@ -110,7 +113,7 @@ const Select = () => {
         <SelectedTags
           items={selectedItems}
           removeItem={removeItem}
-          ref={tagRef}
+          forwardRef={tagRef}
         />
         {!hasSelectedItems &&
           <SearchIcon >

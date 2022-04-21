@@ -21,10 +21,9 @@ const mockDatabaseResponse = (query) => {
   const input = cleanseInput.split("");
 
   for (const item of data) {
-    const [hasMatch, characterMatches] = fuzzySearch(input, item);
+    const hasMatch = fuzzySearch(input, item);
 
     if (hasMatch) {
-      item.queriedLetters = characterMatches;
       result.push(item);
     }
   }
@@ -34,29 +33,24 @@ const mockDatabaseResponse = (query) => {
 
 const fuzzySearch = (input, item) => {
   const lowerCaseName = item.name.toLowerCase();
-  const characterMatches = [];
   let inputIdx = 0;
   let nameIdx = 0;
 
   while (nameIdx < lowerCaseName.length) {
     //Found all input characters, return early.
     if (inputIdx >= input.length) {
-      return [true, characterMatches];
+      return true;
     }
 
     if (input[inputIdx] === lowerCaseName[nameIdx]) {
       inputIdx++;
-      characterMatches[nameIdx] = true;
-    } else {
-      characterMatches[nameIdx] = false;
-    }
-
+    } 
     nameIdx++;
   }
 
   //Catches last character since it won't loop again
   const result = inputIdx >= input.length ? true : false;
-  return [result, characterMatches];
+  return result;
 }
 
 // Emulates a slow API call, don't change this
@@ -89,8 +83,8 @@ const useGetColor = ({ query = "" }) => {
     } else {
       queryPromise(debounceQueryValue).then((response) => {
         const sortedResult = response?.sort((a, b) => a.name.localeCompare(b.name));
-        setData(sortedResult);
-        setCache(cache.set(debounceQueryValue, sortedResult));
+        setData([...sortedResult]);
+        setCache(cache.set(debounceQueryValue, sortedResult))
         setLoading(false);
       });
     }
