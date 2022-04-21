@@ -12,7 +12,6 @@ const SelectedTags = ({ items, removeItem }, ref) => {
           key={item.name}
           item={item}
           removeItem={removeItem}
-          onKeyDownCapture={handleTabPressed}
         />
       ))}
     </TagContainer>
