@@ -1,14 +1,10 @@
-import Instructions from "./components/Instructions";
 import Select from "./components/Select";
 import { styled } from "goober";
 
 function App() {
   return (
     <Wrapper>
-      <Content>
-        <Instructions />
-        <Select />
-      </Content>
+      <Select />
     </Wrapper>
   );
 }
@@ -27,7 +23,5 @@ const Wrapper = styled("div")`
     font-family: source-code-pro, monospace;
   }
 `;
-
-const Content = styled("div")``;
 
 export default App;

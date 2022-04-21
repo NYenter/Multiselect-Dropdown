@@ -78,6 +78,7 @@ export const styles = /* css */ `
   --br: 5px;
   --br-xl: 12px;
   --br-lg: 8px;
+  --br-md: 5px;
   --br-sm: 3px;
 
   /* Colors */
