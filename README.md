@@ -6,6 +6,10 @@ You will be recreating a multiselect dropdown component, packed with several fea
 
 At Blitz, we deliver solutions with a future-focused, pixel-perfect mindset. So pay extra attention to the user experiences, and the design details provided below.
 
+## Example
+![image](https://user-images.githubusercontent.com/48213012/164521611-cdab9c01-6a0c-42d3-be30-2a4247bb8f3e.png)
+
+
 ## Design Guide:
 
 [Figma file](https://www.figma.com/file/07fRGQwCkh62Vy4HaUbmjd/Take-Home-Test?node-id=1%3A113)
