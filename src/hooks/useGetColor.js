@@ -80,6 +80,11 @@ const useGetColor = ({ query = "" }) => {
     if (cache.has(debounceQueryValue)) {
       setData(cache.get(debounceQueryValue));
       setLoading(false);
+    } else if (hasValidWordsInCache(cache, debounceQueryValue)) {
+      const result = getQueryFromExistingCache();
+      setData([...result]);
+      setCache(cache.set(debounceQueryValue, result))
+      setLoading(false);
     } else {
       queryPromise(debounceQueryValue).then((response) => {
         const sortedResult = response?.sort((a, b) => a.name.localeCompare(b.name));
@@ -90,10 +95,44 @@ const useGetColor = ({ query = "" }) => {
     }
   }, [debounceQueryValue]);
 
+  const getQueryFromExistingCache = () => {
+    const charArray = debounceQueryValue.split("");
+    const result = [];
+
+    for(const [key, value] of cache) {
+      if(key[0] !== charArray[0]) continue;
+
+      for(const item of value) {
+        const hasLetters = fuzzySearch(debounceQueryValue, item);
+
+        if(hasLetters) {
+          result.push(item);
+        }
+      }
+    }
+    return result;
+  }
+
   return {
     data,
     loading,
   };
 };
+
+const hasValidWordsInCache = (cache, input) => {
+  const charArray = input.split("");
+  const keyArray = [...cache.keys()];
+  const startingLettersInCache = keyArray.map((key) => key[0]);
+
+  if(startingLettersInCache.includes(charArray[0])) {
+    const keysWithStartingLetter = keyArray.filter((key) => key[0] === charArray[0]);
+    const smallestLength = keysWithStartingLetter.reduce((acc, next) => acc = Math.min(acc, next.length), 100);
+
+    return smallestLength < input.length ? true : false;
+  }
+  return false;
+}
+
+
 
 export default useGetColor;
