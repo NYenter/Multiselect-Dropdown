@@ -9,6 +9,7 @@ const SearchResultContainer = ({
   addItem,
   isDisabled,
   clearFilteredItems,
+  showErrorMessage,
 }) => {
   const [items, setFilteredItems] = useState([]);
 
@@ -23,7 +24,10 @@ const SearchResultContainer = ({
   }, [clearFilteredItems]);
 
   const filterOutSelectedItems = (item) => {
-    if (isDisabled) return;
+    if (isDisabled) {
+      showErrorMessage();
+      return;
+    }
 
     const filteredItems = items?.filter((staticItem) => staticItem.name !== item.name);
 

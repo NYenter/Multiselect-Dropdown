@@ -4,6 +4,7 @@ import useGetColor from "../hooks/useGetColor";
 import useHighlightMatching from "../hooks/useHighlightMatching";
 import QueryResultContainer from "./queried results/QueryResultContainer";
 import SelectedTags from "./tags/SelectedTags";
+import ErrorMessage from "./ErrorMessage";
 import { ReactComponent as Clear } from "../assets/close.svg";
 
 const Select = () => {
@@ -11,14 +12,16 @@ const Select = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [lastSelectedItem, setLastSelectedItem] = useState("");
   const [results, setResults] = useState([]);
-  const [higlighteResults, setHighlightedResults] = useState([]);
   const [isDisabled, setIsDisabled] = useState(false);
   const [isTextDisabled, setIsTextDisabled] = useState(false);
   const [reset, setReset] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showError, setShowError] = useState(false);
   const { data, loading } = useGetColor({ query: input.toLowerCase() });
-  const higlightedResult = useHighlightMatching(results, input);
   const tagRef = useRef();
   let clearFilteredItems = false;
+
+  useHighlightMatching(results, input);
 
   useEffect(() => {
     const filteredData = filterOutSelectedItems();
@@ -28,7 +31,7 @@ const Select = () => {
   useEffect(() => {
     setIsDisabled(disableFields());
     setIsTextDisabled(disableText());
-  }, [lastSelectedItem])
+  }, [results, selectedItems])
 
   const addItem = (item) => setSelectedItems([...selectedItems, item]);
 
@@ -39,9 +42,6 @@ const Select = () => {
 
   const filterOutSelectedItems = () => {
     const selected = new Set(selectedItems?.map((item) => item.name));
-    const lastItem = [...selected][selected.size - 1];
-
-    setLastSelectedItem(lastItem);
     return data?.filter((item) => !selected.has(item.name));
   }
 
@@ -51,30 +51,17 @@ const Select = () => {
   }
 
   const disableText = () => {
-    let wasPreviouslyDisabled = false;
+    const selectedNames = selectedItems.map((item) => item.name);
+
+    if (selectedItems.length === 3) {
+      setLastSelectedItem(selectedNames[selectedNames.length - 1]);
+    }
 
     return (function () {
-      if (disableFields()) {
-        wasPreviouslyDisabled = true;
-        return true;
-      }
-
-      const selectedNames = selectedItems.map((item) => item.name);
+      if (isDisabled) return true;
+      
       const hasSelectedItem = selectedNames.includes(lastSelectedItem);
-
-      if (wasPreviouslyDisabled) {
-        const isCurrentlyDisabled = selectedItems.length < 3 && !hasSelectedItem ? false : true;
-
-        if (isCurrentlyDisabled) return true;
-
-        wasPreviouslyDisabled = false;
-        return false;
-      } else if (hasSelectedItem && disableFields()) {
-        wasPreviouslyDisabled = true;
-        return true;
-      } else {
-        return false;
-      }
+      return hasSelectedItem && selectedItems.length > 0 ? true : false;
     }());
   };
 
@@ -93,6 +80,17 @@ const Select = () => {
     clearFilteredItems = false;
   }
 
+  const showErrorMessage = () => {
+    if (!isDisabled) return;
+    setErrorMessage(`A max of 3 items can be selected at once.`)
+    setShowError(true);
+
+    // Showing error for 3s then closing
+    setTimeout(() => {
+      setShowError(false);
+    }, 3500)
+  }
+
   // Attempting to forward the ref to the Selected Tags
   // component to be able to cycle through the tags.
   // Currently the ref value is undefined.
@@ -107,7 +105,7 @@ const Select = () => {
   const hasInput = input.length > 0;
   const hasSelectedItems = selectedItems.length > 0;
 
-  return ( 
+  return (
     <Wrapper>
       <SelectControl is_filled={hasInput.toString()}>
         <SelectedTags
@@ -135,6 +133,9 @@ const Select = () => {
           </ClearContainer>
         }
       </SelectControl>
+      {showError &&
+        <ErrorMessage message={errorMessage} />
+      }
       {!reset &&
         <QueryResultContainer
           results={results}
@@ -142,6 +143,7 @@ const Select = () => {
           addItem={addItem}
           isDisabled={isDisabled}
           clearFilteredItems={clearFilteredItems}
+          showErrorMessage={showErrorMessage}
         />
       }
     </Wrapper>
