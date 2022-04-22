@@ -2,19 +2,20 @@ import { styled, keyframes } from "goober";
 import { ReactComponent as Close } from "../../assets/close.svg";
 
 const Tag = ({ item, removeItem }) => (
-  <TagItem
-    item_color={item.hex}
-    onClick={() => removeItem(item)}
-  >
-    <Text>
-      {item.name}
-    </Text>
-    <CloseBtn
-      color={item.hex}
+    <TagItem
+      item_color={item.hex}
       onClick={() => removeItem(item)}
-    />
-  </TagItem>
-)
+      tabIndex={0}
+    >
+      <Text>
+        {item.name}
+      </Text>
+      <CloseBtn
+        color={item.hex}
+        onClick={() => removeItem(item)}
+      />
+    </TagItem>
+  )
 
 const keyFrameLoading = keyframes
   `
@@ -66,6 +67,12 @@ const TagItem = styled("div")(({ item_color }) => (
       animation-duration: .3s;
       animation-iteration-count: 1;
       animation-timing-function: ease-out;
+    }
+
+    &:focus {
+      transform: scale(1.1);
+      box-shadow: 0px 0px 1px 3px ${item_color}44;
+      outline: 0;
     }
   `
 ));

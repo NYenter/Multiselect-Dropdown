@@ -1,12 +1,11 @@
-import React from "react";
 import { styled } from "goober";
 import Tag from "./Tag";
 
-const SelectedTags = ({ items, removeItem }, ref) => {
+const SelectedTags = ({ items, removeItem }) => {
   const reversedItemOrder = [...items]?.reverse();
 
   return (
-    <TagContainer ref={ref}>
+    <TagContainer>
       {reversedItemOrder?.map((item) => (
         <Tag
           key={item.name}
@@ -24,4 +23,4 @@ const TagContainer = styled("div")`
   align-items: center;
 `;
 
-export default React.forwardRef(SelectedTags);
+export default SelectedTags;

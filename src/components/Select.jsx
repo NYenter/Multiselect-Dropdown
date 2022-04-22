@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "goober";
 import useGetColor from "../hooks/useGetColor";
 import useHighlightMatching from "../hooks/useHighlightMatching";
@@ -18,7 +18,6 @@ const Select = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
   const { data, loading } = useGetColor({ query: input.toLowerCase() });
-  const tagRef = useRef();
   let clearFilteredItems = false;
 
   useHighlightMatching(results, input);
@@ -91,17 +90,6 @@ const Select = () => {
     }, 3500)
   }
 
-  // Attempting to forward the ref to the Selected Tags
-  // component to be able to cycle through the tags.
-  // Currently the ref value is undefined.
-  const focusOnTags = (e) => {
-    if (e.key === 'Tab') {
-      console.log(tagRef);
-      return true;
-    }
-    return false;
-  }
-
   const hasInput = input.length > 0;
   const hasSelectedItems = selectedItems.length > 0;
 
@@ -111,7 +99,6 @@ const Select = () => {
         <SelectedTags
           items={selectedItems}
           removeItem={removeItem}
-          forwardRef={tagRef}
         />
         {!hasSelectedItems &&
           <SearchIcon >
@@ -125,7 +112,6 @@ const Select = () => {
           placeholder="Select..."
           disabled={isTextDisabled}
           is_filled={hasInput.toString()}
-          onKeyDown={focusOnTags}
         />
         {input.length > 0 &&
           <ClearContainer>
