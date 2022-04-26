@@ -110,7 +110,8 @@ const useGetColor = ({ query = "" }) => {
         }
       }
     }
-    return result;
+    const noDupes = new Set(result);
+    return [...noDupes];
   }
 
   return {
